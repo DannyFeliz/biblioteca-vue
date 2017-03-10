@@ -25,26 +25,31 @@
                                         <div class="content table-responsive table-full-width">
                                             <table class="table table-hover table-striped">
                                                 <thead>
-                                                <th>#</th>
-                                                <th>Título</th>
-                                                <th>Autor</th>
-                                                <th>Año</th>
-                                                <th>Editora</th>
-                                                <th># Páginas</th>
-                                                <th>Género</th>
-                                                <th>Acciones</th>
+                                                    <tr>
+                                                        <th>#</th>
+                                                        <th>Título</th>
+                                                        <th>Autor</th>
+                                                        <th>Año</th>
+                                                        <th>Editora</th>
+                                                        <th># Páginas</th>
+                                                        <th>Género</th>
+                                                        <th>Rentar</th>
+                                                    </tr>
                                                 </thead>
                                                 <tbody>
-                                                <tr v-for="user in availableBooks">
-                                                    <td>{{ user.id }}</td>
-                                                    <td>{{ user.Title }}</td>
-                                                    <td>{{ user.Author }}</td>
-                                                    <td>{{ user.Year }}</td>
-                                                    <td>{{ user.Publisher }}</td>
-                                                    <td>{{ user.PageCount }}</td>
-                                                    <td>{{ user.Genre }}</td>
-                                                    <td>X</td>
-                                                    <!--<td>Oud-Turnhout</td>-->
+                                                <tr v-for="book in availableBooks">
+                                                    <td>{{ book.id }}</td>
+                                                    <td>{{ book.Title }}</td>
+                                                    <td>{{ book.Author }}</td>
+                                                    <td>{{ book.Year }}</td>
+                                                    <td>{{ book.Publisher }}</td>
+                                                    <td>{{ book.PageCount }}</td>
+                                                    <td>{{ book.Genre }}</td>
+                                                    <td>
+                                                        <button type="button" @click="rentBook(book.id)" rel="tooltip" title="" class="btn btn-info btn-simple btn-xs" data-original-title="Rentar Libro">
+                                                            <i class="fa fa-edit"></i>
+                                                        </button>
+                                                    </td>
                                                 </tr>
                                                 </tbody>
                                             </table>
@@ -55,7 +60,7 @@
                                     <!--TODO: NO Disponibles-->
                                     <div role="tabpanel" class="tab-pane" id="profile">
                                         <div class="content table-responsive table-full-width">
-                                            <table class="table table-hover table-striped">
+                                            <table class="table table-hover table-striped" id="no-disponible">
                                                 <thead>
                                                 <th>#</th>
                                                 <th>Título</th>
@@ -76,7 +81,6 @@
                                                     <td>{{ book.PageCount }}</td>
                                                     <td>{{ book.Genre }}</td>
                                                     <td>{{ book.ReturnDate | formatDate }}</td>
-                                                    <!--<td>Oud-Turnhout</td>-->
                                                 </tr>
                                                 </tbody>
                                             </table>
@@ -109,7 +113,8 @@
             }
         },
         mounted() {
-          this.getUsers();
+          this.getBooks();
+          $("table").dataTable();
         },
         filters: {
             formatDate(date) {
@@ -118,16 +123,22 @@
             }
         },
         methods: {
-            getUsers() {
+            getBooks() {
                 axios({
-                    url: "http://localhost:3000/books",
+                    url: `${API}/books`,
                     method: "GET"
                 }).then((response) => {
                     this.booksList = response.data;
                     this.availableBooks = this.booksList.filter(book => !book.IsRented);
                     this.notAvailableBooks = this.booksList.filter(book => book.IsRented);
+                    setTimeout(() => {
+                        $('button').tooltip();
+                    }, 1000)
                    console.log(response);
                 });
+            },
+            rentBook(bookId) {
+                this.$router.push(`/rents/make-rent/${bookId}`);
             }
         }
 

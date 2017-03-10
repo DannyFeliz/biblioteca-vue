@@ -4,6 +4,8 @@ import VueRouter from 'vue-router'
 import axios from "axios";
 import _ from "underscore";
 import moment from "moment";
+import swal from "sweetalert";
+import "sweetalert/dist/sweetalert.css"
 import { env } from "./ENV"
 
 moment.locale("es");
@@ -11,6 +13,8 @@ window.API = env.API;
 window.axios = axios;
 window._ = _;
 window.moment = moment;
+window.swal = swal;
+
 import { routes } from "./routes"
 Vue.use(VueRouter);
 

@@ -13,10 +13,12 @@
                             <div class="content table-responsive table-full-width">
                                 <table class="table table-hover table-striped">
                                     <thead>
-                                    <th>#</th>
-                                    <th>Nombre</th>
-                                    <th>Apellido</th>
-                                    <th>Email</th>
+                                        <tr>
+                                            <th>#</th>
+                                            <th>Nombre</th>
+                                            <th>Apellido</th>
+                                            <th>Email</th>
+                                        </tr>
                                     </thead>
                                     <tbody>
                                     <tr v-for="user in usersList">
@@ -24,7 +26,6 @@
                                         <td>{{ user.Name }}</td>
                                         <td>{{ user.LastName }}</td>
                                         <td>{{ user.Email }}</td>
-                                        <!--<td>Oud-Turnhout</td>-->
                                     </tr>
                                     </tbody>
                                 </table>
@@ -51,11 +52,12 @@
         },
         mounted() {
           this.getUsers();
+            $("table").dataTable();
         },
         methods: {
             getUsers() {
                 axios({
-                    url: "http://localhost:3000/users",
+                    url: `${API}/users`,
                     method: "GET"
                 }).then((response) => {
                     this.usersList = response.data;

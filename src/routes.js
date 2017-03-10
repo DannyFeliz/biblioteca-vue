@@ -6,10 +6,13 @@ import Home from "./components/Home.vue"
 import Login from "./components/User/Login.vue"
 import Register from "./components/User/Register.vue"
 
+import MakeRent from "./components/Rents/MakeRent.vue"
+
 
 
 // User
 import UserList from "./components/User/List.vue"
+import UserRentsList from "./components/User/RentsList.vue"
 
 // Books
 import BooksList from "./components/Books/List.vue"
@@ -29,7 +32,11 @@ export const routes = [
     { path: '/users/list', component: UserList },
     { path: '/login', component: Login },
     { path: '/register', component: Register },
+    { path: '/users/rents/list', component: UserRentsList },
 
     // Books
     { path: '/books/list', component: BooksList },
+
+    // Rents
+    { path: '/rents/make-rent/:id', component: MakeRent }
 ]

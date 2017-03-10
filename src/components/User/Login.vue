@@ -43,7 +43,7 @@
         name: "Login",
         data () {
             return {
-                email: "dannyfeliz08@gmail.com",
+                email: "danny@gmail.com",
                 password: "123456",
                 user: []
             }
@@ -58,7 +58,7 @@
         methods: {
             login(e) {
                 axios({
-                    url: `http://localhost:3000/users?Email=${this.email}&Password=${this.password}`,
+                    url: `${API}/users?Email=${this.email}&Password=${this.password}`,
                     method: "GET"
                 }).then((response) => {
                     this.user = response.data;
@@ -73,7 +73,10 @@
                         return;
                     }
 
-                    localStorage.setItem("user", JSON.stringify(this.user[0]));
+                    let user = JSON.stringify(this.user[0]);
+                    localStorage.setItem("user", user);
+                    window.User = JSON.parse(user);
+
                     this.$router.push("/home");
                     console.log(response);
                 });
