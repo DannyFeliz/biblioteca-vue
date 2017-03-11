@@ -15,16 +15,10 @@ import UserList from "./components/User/List.vue"
 import UserRentsList from "./components/User/RentsList.vue"
 
 // Books
-import BooksList from "./components/Books/List.vue"
+import ListBook from "./components/Books/List.vue"
+import CreateBook from "./components/Books/Create.vue"
 
-// 2. Define some routes
-// Each route should map to a component. The "component" can
-// either be an actual component constructor created via
-// Vue.extend(), or just a component options object.
-// We'll talk about nested routes later.
 export const routes = [
-    { path: '/foo', component: Foo },
-    { path: '/bar', component: Bar },
     { path: '/', component: Home },
     { path: '/home', component: Home },
 
@@ -35,7 +29,8 @@ export const routes = [
     { path: '/users/rents/list', component: UserRentsList },
 
     // Books
-    { path: '/books/list', component: BooksList },
+    { path: '/books/list', component: ListBook },
+    { path: '/books/create', component: CreateBook },
 
     // Rents
     { path: '/rents/make-rent/:id', component: MakeRent }

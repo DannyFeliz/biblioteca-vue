@@ -66,12 +66,14 @@
             }
         },
         mounted() {
-          this.getBook();
-          this.returnDate = "";
+            if (!localStorage.getItem("user")) {
+                this.$router.replace("/login");
+            }
+            this.getBook();
+            this.returnDate = "";
         },
         filters: {
             formatDate(date) {
-                console.log(date);
                 return moment(date).fromNow();
             }
         },
@@ -86,13 +88,13 @@
                 });
             },
             makeRent() {
-                let currentDate = moment();
-                let returnDate = moment(this.returnDate);
                 let user = JSON.parse(localStorage.getItem("user"));
+                console.log("user", user);
                 let form = {
-                    "UserId": user.id,
+                    "UserId": user.Id,
                     "BookId": Number(this.$route.params.id),
                     "RentDuration": this.returnDate,
+                    "IsReturned": 0,
                     "CreatedAt": moment().format("YYYY-MM-DDTHH:mm:ss.SSSSZ"),
                     "UpdatedAt": moment().format("YYYY-MM-DDTHH:mm:ss.SSSSZ")
                 };

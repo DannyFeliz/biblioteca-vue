@@ -10,7 +10,7 @@
                         </div>
                         <div class="content">
                             <!--<div id="chartPreferences" class="ct-chart ct-perfect-fourth">-->
-                                <p>asdasdasdasd as</p>
+
                             <!--</div>-->
 
                             <div class="footer">
@@ -36,7 +36,9 @@
             }
         },
         mounted() {
-
+            if (!localStorage.getItem("user")) {
+                this.$router.replace("/login");
+            }
         }
 
     }

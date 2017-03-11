@@ -5,7 +5,12 @@
                 <div class="col-md-12">
                     <div class="card">
                         <div class="header">
-                            <h4 class="title">Listado de Libros Disponibles</h4>
+                            <h4 class="title inline">Listado de Libros Disponibles</h4>
+                            <div class="inline pull-right" v-if="user && user.Role == 1">
+                                <router-link to="/books/create" class="btn btn-primary btn-fill btn-wd">
+                                   Crear Libro
+                                </router-link>
+                            </div>
                             <p class="category"></p>
                         </div>
                         <div class="content">
@@ -38,7 +43,7 @@
                                                 </thead>
                                                 <tbody>
                                                 <tr v-for="book in availableBooks">
-                                                    <td>{{ book.id }}</td>
+                                                    <td>{{ book.Id }}</td>
                                                     <td>{{ book.Title }}</td>
                                                     <td>{{ book.Author }}</td>
                                                     <td>{{ book.Year }}</td>
@@ -46,7 +51,7 @@
                                                     <td>{{ book.PageCount }}</td>
                                                     <td>{{ book.Genre }}</td>
                                                     <td>
-                                                        <button type="button" @click="rentBook(book.id)" rel="tooltip" title="" class="btn btn-info btn-simple btn-xs" data-original-title="Rentar Libro">
+                                                        <button type="button" @click="rentBook(book.Id)" rel="tooltip" title="" class="btn btn-info btn-simple btn-xs" data-original-title="Rentar Libro">
                                                             <i class="fa fa-edit"></i>
                                                         </button>
                                                     </td>
@@ -73,7 +78,7 @@
                                                 </thead>
                                                 <tbody>
                                                 <tr v-for="book in notAvailableBooks">
-                                                    <td>{{ book.id }}</td>
+                                                    <td>{{ book.Id }}</td>
                                                     <td>{{ book.Title }}</td>
                                                     <td>{{ book.Author }}</td>
                                                     <td>{{ book.Year }}</td>
@@ -110,15 +115,20 @@
                 booksList: [],
                 availableBooks: [],
                 notAvailableBooks: [],
+                user: null
             }
         },
+        created() {
+          this.user = JSON.parse(localStorage.getItem("user"))
+        },
         mounted() {
+            if (!localStorage.getItem("user")) {
+                this.$router.replace("/login");
+            }
           this.getBooks();
-          $("table").dataTable();
         },
         filters: {
             formatDate(date) {
-                console.log(date);
                 return moment(date).fromNow();
             }
         },
@@ -145,5 +155,8 @@
     }
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
+    .inline{
+        display: inline-block;
+    }
 </style>

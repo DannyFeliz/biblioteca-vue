@@ -74,10 +74,8 @@
             }
         },
         mounted() {
-            console.info(localStorage.getItem("user"));
-            if (localStorage.getItem("user")) {
-                this.$router.replace("/home");
-                return;
+            if (!localStorage.getItem("user")) {
+                this.$router.replace("/login");
             }
         },
         methods: {
@@ -115,7 +113,10 @@
                     });
 
                     console.log(response.data);
-                    localStorage.setItem("user", JSON.stringify(response.data));
+                    let user = JSON.stringify(response.data);
+                    localStorage.setItem("user", user);
+                    window.User = JSON.parse(user);
+                    this.$emit("userData", JSON.parse(user));
                     this.$router.push("/home");
                     console.log(response);
                 });

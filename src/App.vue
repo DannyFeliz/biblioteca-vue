@@ -14,63 +14,62 @@
 
                 <div class="sidebar-wrapper">
                     <div class="logo">
-                        <a href="http://www.creative-tim.com" class="simple-text">
+                        <a href="/" class="simple-text">
                             Biblioteca
                         </a>
                     </div>
 
                     <ul class="nav">
                         <li>
-                            <a href="dashboard.html">
+                            <a href="/">
                                 <i class="pe-7s-graph"></i>
                                 <p>Dashboard</p>
                             </a>
                         </li>
-                        <li>
-                            <router-link to="/home">
+                        <li v-if="user">
+                            <router-link to="/users/list" v-if="user.Role == 1">
                                 <i class="pe-7s-user"></i>
-                                <p>Users</p>
+                                <p>Usuarios</p>
                             </router-link>
                         </li>
 
                         <li>
                             <router-link to="/books/list">
                                 <i class="pe-7s-note2"></i>
-                                <p>Books</p>
+                                <p>Libros</p>
                             </router-link>
-                            </a>
                         </li>
 
-                        <li>
-                            <a href="typography.html">
-                                <i class="pe-7s-news-paper"></i>
-                                <p>Typography</p>
-                            </a>
-                        </li>
-                        <li>
-                            <a href="icons.html">
-                                <i class="pe-7s-science"></i>
-                                <p>Icons</p>
-                            </a>
-                        </li>
-                        <li>
-                            <a href="maps.html">
-                                <i class="pe-7s-map-marker"></i>
-                                <p>Maps</p>
-                            </a>
-                        </li>
-                        <li>
-                            <a href="notifications.html">
-                                <i class="pe-7s-bell"></i>
-                                <p>Notifications</p>
-                            </a>
-                        </li>
-                        <li class="active-pro">
-                            <a href="upgrade.html">
-                                <i class="pe-7s-rocket"></i>
-                                <p>Upgrade to PRO</p>
-                            </a>
-                        </li>
+                        <!--<li>-->
+                            <!--<a href="#/users/rents/list">-->
+                                <!--<i class="pe-7s-news-paper"></i>-->
+                                <!--<p>Rentas</p>-->
+                            <!--</a>-->
+                        <!--</li>-->
+                        <!--<li>-->
+                            <!--<a href="icons.html">-->
+                                <!--<i class="pe-7s-science"></i>-->
+                                <!--<p>Icons</p>-->
+                            <!--</a>-->
+                        <!--</li>-->
+                        <!--<li>-->
+                            <!--<a href="maps.html">-->
+                                <!--<i class="pe-7s-map-marker"></i>-->
+                                <!--<p>Maps</p>-->
+                            <!--</a>-->
+                        <!--</li>-->
+                        <!--<li>-->
+                            <!--<a href="notifications.html">-->
+                                <!--<i class="pe-7s-bell"></i>-->
+                                <!--<p>Notifications</p>-->
+                            <!--</a>-->
+                        <!--</li>-->
+                        <!--<li class="active-pro">-->
+                            <!--<a href="upgrade.html">-->
+                                <!--<i class="pe-7s-rocket"></i>-->
+                                <!--<p>Upgrade to PRO</p>-->
+                            <!--</a>-->
+                        <!--</li>-->
                     </ul>
                 </div>
             </div>
@@ -124,30 +123,23 @@
 
                             <ul class="nav navbar-nav navbar-right">
                                 <li>
-                                    <a href="">
-                                        <p>Cuenta</p>
-                                    </a>
+                                    <router-link to="/users/rents/list" v-if="user">
+                                        Mi Cuenta
+                                    </router-link>
                                 </li>
-                                <!--<li class="dropdown">-->
-                                    <!--<a href="#" class="dropdown-toggle" data-toggle="dropdown">-->
-                                        <!--<p>-->
-                                            <!--Dropdown-->
-                                            <!--<b class="caret"></b>-->
-                                        <!--</p>-->
-                                    <!--</a>-->
-                                    <!--<ul class="dropdown-menu">-->
-                                        <!--<li><a href="#">Action</a></li>-->
-                                        <!--<li><a href="#">Another action</a></li>-->
-                                        <!--<li><a href="#">Something</a></li>-->
-                                        <!--<li><a href="#">Another action</a></li>-->
-                                        <!--<li><a href="#">Something</a></li>-->
-                                        <!--<li class="divider"></li>-->
-                                        <!--<li><a href="#">Separated link</a></li>-->
-                                    <!--</ul>-->
-                                <!--</li>-->
+                                <li >
+                                    <router-link to="/login" v-if="!user">
+                                        Iniciar Sesión
+                                    </router-link>
+                                </li>
+                                <li >
+                                    <router-link to="/register" v-if="!user">
+                                        Registro
+                                    </router-link>
+                                </li>
                                 <li>
-                                    <a href="javascript:void(0)" @click="logout">
-                                        Cerrar Sesión
+                                    <a href="javascript:void(0)" @click="logout" v-if="user">
+                                        {{ user.Name }} {{ user.LastName}} - Cerrar Sesión
                                     </a>
                                 </li>
                                 <li class="separator hidden-lg hidden-md"></li>
@@ -160,7 +152,7 @@
                 <!--<router-link to="/bar">Go to Bar</router-link>-->
                 <!--<router-link to="/home">Go to Home</router-link>-->
                 <transition name="slide-fade">
-                    <router-view></router-view>
+                    <router-view @userData="userData"></router-view>
                 </transition>
 
             </div>
@@ -185,6 +177,7 @@
         data () {
             return {
                 msg: 'Welcome to Your Vue.js App',
+                user: null
 //                shouldHide: false
             }
         },
@@ -194,8 +187,13 @@
 //            }
         },
         methods: {
+            userData(user) {
+                this.user = user;
+            },
             logout() {
                 localStorage.removeItem("user");
+                this.user = null;
+
                 $.notify({
                     icon: 'pe-7s-info',
                     message: "Has cerrado sesión exitosamente."

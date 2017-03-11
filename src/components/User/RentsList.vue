@@ -5,7 +5,7 @@
                 <div class="col-md-12">
                     <div class="card">
                         <div class="header">
-                            <h4 class="title">Mis Libros Rentados</h4>
+                            <h4 class="title">Mi Cuenta</h4>
                             <p class="category"></p>
                         </div>
                         <div class="content">
@@ -17,10 +17,15 @@
                                 <ul class="nav nav-tabs" role="tablist">
                                     <li role="presentation" class="active"><a href="#home" aria-controls="home" role="tab" data-toggle="tab">Rentados Actualmente</a></li>
                                     <li role="presentation"><a href="#profile" aria-controls="profile" role="tab" data-toggle="tab">Histórico de Renta</a></li>
+                                    <li role="presentation"><a href="#profile-data" aria-controls="profile-data" role="tab" data-toggle="tab">Información</a></li>
                                 </ul>
+
+                                    <!--TODO: Restandos -->
 
                                 <!-- Tab panes -->
                                 <div class="tab-content">
+
+
                                     <!--TODO: Restandos -->
                                     <div role="tabpanel" class="tab-pane active" id="home">
                                         <div class="content table-responsive table-full-width">
@@ -38,7 +43,7 @@
                                                     <td>{{ rent.book.Title }} By {{ rent.book.Author}} - {{ rent.book.Publisher }} - {{ rent.book.Year }} </td>
                                                     <td :class="{ 'text-red': rent.past }">{{ rent.RentDuration | formatReturnDate }}</td>
                                                     <td>
-                                                        <button @click="makeReturn(rent.id)" :data-id="rent.book.id" class="btn btn-primary btn-fill btn-wd">Devolver Libro</button>
+                                                        <button @click="makeReturn(rent.Id)"class="btn btn-primary btn-fill btn-wd">Devolver Libro</button>
                                                     </td>
                                                     <!--<td>{{ rent.Email }}</td>-->
                                                     <!--<td>Oud-Turnhout</td>-->
@@ -69,6 +74,18 @@
 
                                         </div>
                                     </div>
+
+                                    <div role="tabpanel" class="tab-pane" id="profile-data">
+                                        <div class="content table-responsive table-full-width">
+                                           <ul>
+                                               <li><strong>Nombre: </strong>{{ user.Name }}</li>
+                                               <li><strong>Apellido: </strong>{{ user.LastName }}</li>
+                                               <li><strong>Email: </strong>{{ user.Email }}</li>
+                                               <li><strong>Fecha de Registro: </strong>{{ user.CreatedAt | formatReturnDate }}</li>
+                                           </ul>
+                                        </div>
+                                    </div>
+                                    
                                 </div>
 
                             </div>
@@ -101,6 +118,10 @@
         created() {
         },
         mounted() {
+            if (!localStorage.getItem("user")) {
+                this.$router.replace("/login");
+            }
+
             this.getBooks();
         },
         filters: {
@@ -111,25 +132,30 @@
         methods: {
             getRents() {
                 axios({
-                    url: `${API}/rents?UserId=${this.user.id}`,
+                    url: `${API}/rents?UserId=${this.user.Id}`,
                     method: "GET",
                 }).then((response) => {
                     this.rentsList = response.data;
                     this.rentsList = this.rentsList.map(item => {
                         item.past = moment(item.RentDuration).isBefore();
-                        let book = _.findWhere(this.books, {id: item.BookId});
+                        let book = _.findWhere(this.books, {Id: item.BookId});
                         if (book) {
                             item.book = book;
-                            return item;
                         }
+
+                        return item;
+
                     });
 
                     this.currentRented = this.rentsList.filter(rent => !rent.IsReturned);
                     this.alreadyReturned = this.rentsList.filter(rent => rent.IsReturned);
-                    setTimeout(() => {
-                        $("table").dataTable();
-                    }, 500);
-                    console.log(response);
+
+                    this.currentRented = _.sortBy(this.currentRented, function(o) { return o.UpdatedAt; })
+                    this.alreadyReturned = _.sortBy(this.alreadyReturned, function(o) { return o.UpdatedAt; })
+//                    setTimeout(() => {
+//                        $("table").dataTable();
+//                    }, 500);
+//                    console.log(response);
                 });
             },
             getBooks() {
@@ -142,6 +168,7 @@
                 });
             },
             makeReturn(rentId) {
+                console.log("rentId", rentId);
                 swal({
                         title: "Advertencia",
                         text: "¿Estás seguro que deseas devolver este libro?",

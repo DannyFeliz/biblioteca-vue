@@ -22,7 +22,7 @@
                                     </thead>
                                     <tbody>
                                     <tr v-for="user in usersList">
-                                        <td>{{ user.id }}</td>
+                                        <td>{{ user.Id }}</td>
                                         <td>{{ user.Name }}</td>
                                         <td>{{ user.LastName }}</td>
                                         <td>{{ user.Email }}</td>
@@ -51,8 +51,12 @@
             }
         },
         mounted() {
+            if (!localStorage.getItem("user")) {
+                this.$router.replace("/login");
+            }
+
           this.getUsers();
-            $("table").dataTable();
+//            $("table").dataTable();
         },
         methods: {
             getUsers() {
