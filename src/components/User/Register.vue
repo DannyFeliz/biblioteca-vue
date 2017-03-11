@@ -65,18 +65,18 @@
         name: "Register",
         data () {
             return {
-                name: "Jhon",
-                lastName: "Doe",
-                email: "dannyfeliz08@gmail.com",
-                password: "123456",
-                passwordConfirm: "123456",
+                name: "",
+                lastName: "",
+                email: "",
+                password: "",
+                passwordConfirm: "",
                 user: []
             }
         },
         mounted() {
-            if (!localStorage.getItem("user")) {
-                this.$router.replace("/login");
-            }
+//            if (!localStorage.getItem("user")) {
+//                this.$router.replace("/login");
+//            }
         },
         methods: {
             login() {

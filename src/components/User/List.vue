@@ -65,6 +65,7 @@
                     method: "GET"
                 }).then((response) => {
                     this.usersList = response.data;
+
                    console.log(response);
                 });
             }

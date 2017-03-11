@@ -4,10 +4,14 @@ import VueRouter from 'vue-router'
 import axios from "axios";
 import _ from "underscore";
 import moment from "moment";
+// import chartjs from "chart.js"
 import swal from "sweetalert";
 import "sweetalert/dist/sweetalert.css"
 import { env } from "./ENV"
+import spanish from "../src/assets/js/Spanish.json"
 
+window.spanish = spanish;
+// window.chartjs = chartjs;
 moment.locale("es");
 window.API = env.API;
 window.axios = axios;
@@ -25,6 +29,13 @@ export const router = new VueRouter({
 export var hide = false;
 router.afterEach((to, from) => {
     console.log(to);
+    setTimeout(() => {
+        $("table").dataTable({
+            language: spanish
+        });
+    }, 2000)
+
+
     // if (to.path !== "/login" || to.path !== "/register" && !localStorage.getItem("user")) {
         // $.notify({
         //     icon: 'pe-7s-close-circle',

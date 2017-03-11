@@ -43,7 +43,7 @@
                                                     <td>{{ rent.book.Title }} By {{ rent.book.Author}} - {{ rent.book.Publisher }} - {{ rent.book.Year }} </td>
                                                     <td :class="{ 'text-red': rent.past }">{{ rent.RentDuration | formatReturnDate }}</td>
                                                     <td>
-                                                        <button @click="makeReturn(rent.Id)"class="btn btn-primary btn-fill btn-wd">Devolver Libro</button>
+                                                        <button @click="makeReturn(rent.Id, rent.book.Id)"class="btn btn-primary btn-fill btn-wd">Devolver Libro</button>
                                                     </td>
                                                     <!--<td>{{ rent.Email }}</td>-->
                                                     <!--<td>Oud-Turnhout</td>-->
@@ -147,11 +147,13 @@
 
                     });
 
-                    this.currentRented = this.rentsList.filter(rent => !rent.IsReturned);
-                    this.alreadyReturned = this.rentsList.filter(rent => rent.IsReturned);
+                    this.currentRented = this.rentsList.filter(rent => !rent.IsReturned && rent.UserId == this.user.Id);
+                    this.alreadyReturned = this.rentsList.filter(rent => rent.IsReturned && rent.UserId == this.user.Id);
 
                     this.currentRented = _.sortBy(this.currentRented, function(o) { return o.UpdatedAt; })
                     this.alreadyReturned = _.sortBy(this.alreadyReturned, function(o) { return o.UpdatedAt; })
+
+
 //                    setTimeout(() => {
 //                        $("table").dataTable();
 //                    }, 500);
@@ -167,8 +169,9 @@
                     this.getRents()
                 });
             },
-            makeReturn(rentId) {
+            makeReturn(rentId, bookId) {
                 console.log("rentId", rentId);
+                console.log("bookId", bookId);
                 swal({
                         title: "Advertencia",
                         text: "¿Estás seguro que deseas devolver este libro?",
@@ -179,16 +182,43 @@
                         closeOnConfirm: false
                     },() => {
                         swal("¡Libro Devuelto!", "Se ha completado la devolución correctamente", "success");
-                        this.returnBook(rentId)
+                        this.returnBook(rentId, bookId)
                     });
             },
-            returnBook(rentId) {
+            returnBook(rentId, bookId) {
                 console.log("rentId", rentId);
                 //TODO: Update Book isReturned field
+                // TODO: Change to PUT
+
+
+                let rent = _.findWhere(this.rentsList, {"Id": rentId});
+                console.warn(rent);
+//                console.warn(temp);
+                console.warn(rent);
+                let form = _.extend(rent, { "IsReturned": 1, "UpdatedAt": moment().format("YYYY-MM-DDTHH:mm:ss.SSSSZ")});
+                console.warn({form});
                 axios({
                     url: `${API}/rents/${rentId}`,
-                    method: "PATCH",
-                    data: { "IsReturned": 1, "UpdatedAt": moment().format("YYYY-MM-DDTHH:mm:ss.SSSSZ")},
+                    method: "PUT",
+                    data: form,
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                }).then((response) => {
+                    console.log(response);
+                    this.getBooks();
+                    this.makeBookAvailable(bookId);
+                });
+            },
+            makeBookAvailable(bookId) {
+                let book = _.findWhere(this.books, {"Id": bookId});
+                book = _.extend(book, { IsRented: 0});
+                console.warn({book});
+//                debugger;
+                axios({
+                    url: `${API}/books/${bookId}`,
+                    method: "PUT",
+                    data: book,
                     headers: {
                         'Content-Type': 'application/json'
                     }
@@ -205,5 +235,21 @@
 <style lang="scss">
     .text-red{
         color: red;
+    }
+    .dataTables_filter{
+        float: right;
+    }
+
+    input[type=search].input-sm{
+        height: 25px;
+        margin-left: 7px;
+    }
+
+    #DataTables_Table_0_info{
+        display: none;
+    }
+
+    .dataTables_paginate.paging_simple_numbers{
+        float: right;
     }
 </style>

@@ -3,7 +3,7 @@
 
 
         <div class="wrapper">
-            <div  class="sidebar" data-color="purple" data-image="src/assets/img/sidebar-5.jpg">
+            <div  class="sidebar" data-color="azure" data-image="src/assets/img/sidebar-5.jpg">
 
                 <!--
 
@@ -14,17 +14,17 @@
 
                 <div class="sidebar-wrapper">
                     <div class="logo">
-                        <a href="/" class="simple-text">
-                            Biblioteca
-                        </a>
+                        <router-link to="/" class="simple-text">
+                            <i class="pe-7s-science"></i> Biblioteca
+                        </router-link>
                     </div>
 
                     <ul class="nav">
                         <li>
-                            <a href="/">
+                            <router-link to="/">
                                 <i class="pe-7s-graph"></i>
                                 <p>Dashboard</p>
-                            </a>
+                            </router-link>
                         </li>
                         <li v-if="user">
                             <router-link to="/users/list" v-if="user.Role == 1">
@@ -172,6 +172,7 @@
 </template>
 
 <script>
+
     export default {
         name: 'app',
         data () {
@@ -182,9 +183,17 @@
             }
         },
         mounted() {
+                if (localStorage.getItem("user")) {
+                    this.user = JSON.parse(localStorage.getItem("user"));
+                }
 //            if (this.$route.path == "/login") {
 //                this.shouldHide = true;
 //            }
+            setTimeout(() => {
+                $("table").dataTable({
+                    language: spanish
+                });
+            }, 1000)
         },
         methods: {
             userData(user) {

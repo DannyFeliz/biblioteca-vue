@@ -8,7 +8,7 @@
                             <h4 class="title inline">Listado de Libros Disponibles</h4>
                             <div class="inline pull-right" v-if="user && user.Role == 1">
                                 <router-link to="/books/create" class="btn btn-primary btn-fill btn-wd">
-                                   Crear Libro
+                                    Crear Libro
                                 </router-link>
                             </div>
                             <p class="category"></p>
@@ -19,8 +19,11 @@
 
                                 <!-- Nav tabs -->
                                 <ul class="nav nav-tabs" role="tablist">
-                                    <li role="presentation" class="active"><a href="#home" aria-controls="home" role="tab" data-toggle="tab">Disponibles</a></li>
-                                    <li role="presentation"><a href="#profile" aria-controls="profile" role="tab" data-toggle="tab">No Disponibles</a></li>
+                                    <li role="presentation" class="active"><a href="#home" aria-controls="home"
+                                                                              role="tab"
+                                                                              data-toggle="tab">Disponibles</a></li>
+                                    <li role="presentation"><a href="#profile" aria-controls="profile" role="tab"
+                                                               data-toggle="tab">No Disponibles</a></li>
                                 </ul>
 
                                 <!-- Tab panes -->
@@ -30,16 +33,16 @@
                                         <div class="content table-responsive table-full-width">
                                             <table class="table table-hover table-striped">
                                                 <thead>
-                                                    <tr>
-                                                        <th>#</th>
-                                                        <th>Título</th>
-                                                        <th>Autor</th>
-                                                        <th>Año</th>
-                                                        <th>Editora</th>
-                                                        <th># Páginas</th>
-                                                        <th>Género</th>
-                                                        <th>Rentar</th>
-                                                    </tr>
+                                                <tr>
+                                                    <th>#</th>
+                                                    <th>Título</th>
+                                                    <th>Autor</th>
+                                                    <th>Año</th>
+                                                    <th>Editora</th>
+                                                    <th># Páginas</th>
+                                                    <th>Género</th>
+                                                    <th>Rentar</th>
+                                                </tr>
                                                 </thead>
                                                 <tbody>
                                                 <tr v-for="book in availableBooks">
@@ -51,7 +54,9 @@
                                                     <td>{{ book.PageCount }}</td>
                                                     <td>{{ book.Genre }}</td>
                                                     <td>
-                                                        <button type="button" @click="rentBook(book.Id)" rel="tooltip" title="" class="btn btn-info btn-simple btn-xs" data-original-title="Rentar Libro">
+                                                        <button type="button" @click="rentBook(book.Id)" rel="tooltip"
+                                                                title="" class="btn btn-info btn-simple btn-xs"
+                                                                data-original-title="Rentar Libro">
                                                             <i class="fa fa-edit"></i>
                                                         </button>
                                                     </td>
@@ -67,14 +72,15 @@
                                         <div class="content table-responsive table-full-width">
                                             <table class="table table-hover table-striped" id="no-disponible">
                                                 <thead>
-                                                <th>#</th>
-                                                <th>Título</th>
-                                                <th>Autor</th>
-                                                <th>Año</th>
-                                                <th>Editora</th>
-                                                <th># Páginas</th>
-                                                <th>Género</th>
-                                                <th>Fecha Devolución</th>
+                                                <tr>
+                                                    <th>#</th>
+                                                    <th>Título</th>
+                                                    <th>Autor</th>
+                                                    <th>Año</th>
+                                                    <th>Editora</th>
+                                                    <th># Páginas</th>
+                                                    <th>Género</th>
+                                                </tr>
                                                 </thead>
                                                 <tbody>
                                                 <tr v-for="book in notAvailableBooks">
@@ -85,7 +91,6 @@
                                                     <td>{{ book.Publisher }}</td>
                                                     <td>{{ book.PageCount }}</td>
                                                     <td>{{ book.Genre }}</td>
-                                                    <td>{{ book.ReturnDate | formatDate }}</td>
                                                 </tr>
                                                 </tbody>
                                             </table>
@@ -99,11 +104,11 @@
                         </div>
 
 
-                        </div>
                     </div>
                 </div>
             </div>
         </div>
+    </div>
     </div>
 </template>
 
@@ -119,16 +124,18 @@
             }
         },
         created() {
-          this.user = JSON.parse(localStorage.getItem("user"))
+            this.user = JSON.parse(localStorage.getItem("user"))
         },
         mounted() {
             if (!localStorage.getItem("user")) {
                 this.$router.replace("/login");
             }
-          this.getBooks();
+            this.getBooks();
         },
         filters: {
             formatDate(date) {
+                console.log("date", date);
+                debugger;
                 return moment(date).fromNow();
             }
         },
@@ -144,7 +151,7 @@
                     setTimeout(() => {
                         $('button').tooltip();
                     }, 1000)
-                   console.log(response);
+                    console.log(response);
                 });
             },
             rentBook(bookId) {
@@ -156,7 +163,7 @@
 </script>
 
 <style lang="scss" scoped>
-    .inline{
+    .inline {
         display: inline-block;
     }
 </style>

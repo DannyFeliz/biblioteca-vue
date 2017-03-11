@@ -43,8 +43,8 @@
         name: "Login",
         data () {
             return {
-                email: "danny@gmail.com",
-                password: "123456",
+                email: "",
+                password: "",
                 user: []
             }
         },

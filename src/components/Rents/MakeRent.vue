@@ -123,15 +123,17 @@
             }
             ,
             updateBookRentedStatus() {
-                let form = {
-                    IsRented: true,
+
+                console.warn(this.book);
+                let form = _.extend(this.book, {
+                    IsRented: 1,
                     UpdatedAt: moment().format("YYYY-MM-DDTHH:mm:ss.SSSSZ"),
                     ReturnDate: this.returnDate
-                };
+                });
 
                 axios({
                     url: `${API}/books/${this.$route.params.id}`,
-                    method: "PATCH",
+                    method: "PUT",
                     data: form,
                     headers: {
                         'Content-Type': 'application/json'
